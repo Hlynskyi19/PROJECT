@@ -1,0 +1,96 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Вхід - EcoBonus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-8">
+            
+            <div class="card rounded-4 shadow-sm border-0 bg-body">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="text-center mb-4">
+                        <i class="fa-solid fa-leaf fa-3x text-success mb-2 opacity-75"></i>
+                        <h2 class="fw-bold text-success mb-1">EcoBonus</h2>
+                        <h4 class="text-secondary fw-normal">З поверненням!</h4>
+                        <p class="text-muted mt-2 mx-auto">
+                            Увійдіть у свій акаунт, щоб продовжити.
+                        </p>
+                    </div>
+
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger rounded-3" role="alert">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-floating mb-3">
+                            {{ form.username }}
+                            <label for="{{ form.username.id_for_label }}"><i class="fa-solid fa-user me-2 opacity-50"></i>Логін</label>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="input-group">
+                                <div class="form-floating flex-grow-1">
+                                    {{ form.password }}
+                                    <label for="{{ form.password.id_for_label }}"><i class="fa-solid fa-lock me-2 opacity-50"></i>Пароль</label>
+                                </div>
+                                <button class="btn btn-outline-secondary rounded-end border-success-subtle" type="button" id="togglePasswordLogin" style="background: transparent;">
+                                    <i class="fa-solid fa-eye text-success opacity-75" id="eyeIconLogin"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 mb-3">
+                            <button type="submit" class="btn btn-success btn-lg w-100 rounded-pill shadow-sm" style="transition: 0.3s;" id="submitBtn">
+                                Увійти в систему
+                            </button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <p class="text-muted small mb-0">Ще не з нами?</p>
+                            <a href="{% url 'register' %}" class="btn btn-outline-info btn-sm rounded-pill mt-1">
+                                <i class="fa-solid fa-user-plus me-2"></i>Створити акаунт
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div> </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // 1. ТРЮК: Автоматично додаємо класи Bootstrap до полів Django
+        // Це позбавляє нас необхідності писати LoginForm у forms.py
+        const inputs = document.querySelectorAll('form input:not([type="hidden"])');
+        inputs.forEach(input => {
+            input.classList.add('form-control', 'rounded-3', 'border-success-subtle', 'bg-transparent');
+            input.setAttribute('placeholder', ' '); // Магія для роботи floating labels
+        });
+
+        // 2. ЛОГІКА ІКОНКИ "ОКА"
+        const passwordInput = document.querySelector('input[name="password"]');
+        const togglePasswordBtn = document.getElementById('togglePasswordLogin');
+        const eyeIcon = document.getElementById('eyeIconLogin');
+
+        if (togglePasswordBtn && passwordInput) {
+            togglePasswordBtn.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                eyeIcon.classList.toggle('fa-eye');
+                eyeIcon.classList.toggle('fa-eye-slash');
+            });
+        }
+    });
+</script>
+{% endblock %}

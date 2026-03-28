@@ -1,0 +1,31 @@
+/* Глобальні налаштування */
+body {
+    background-color: #f4f7f6; /* Світло-сірий фон для контрасту з текстом */
+    color: #333; /* Темний колір тексту для читабельності */
+    margin: 0;
+    padding: 0;
+}
+
+/* Стилі для бокової панелі */
+.sidebar {
+    width: 280px;
+    background-color: #1b4332; /* Глибокий темно-зелений колір */
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+/* Ефект наведення на пункти меню */
+.sidebar .nav-link {
+    transition: all 0.3s ease;
+    opacity: 0.85;
+}
+
+.sidebar .nav-link:hover {
+    background-color: #2d6a4f; /* Світліший зелений при наведенні */
+    opacity: 1;
+    padding-left: 20px; /* Легкий ефект зсуву тексту */
+}
+
+/* Обгортка для карти, щоб вона виглядала акуратніше */
+#map {
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}

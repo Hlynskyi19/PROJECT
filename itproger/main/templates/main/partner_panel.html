@@ -1,0 +1,62 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Панель Підприємства - EcoBonus{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-success border-2">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="fa-solid fa-building-circle-check"></i> Робоче місце: Пункт прийому</h4>
+                </div>
+                <div class="card-body p-4">
+                    <p class="text-muted mb-4">Тут ви можете нараховувати еко-бали клієнтам, які принесли вторсировину на ваш пункт.</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Логін клієнта (Username):</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" name="username" class="form-control" placeholder="Наприклад: dima_test" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Кількість балів для нарахування:</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-coins text-warning"></i></span>
+                                <input type="number" name="points" class="form-control" min="1" max="1000" placeholder="100" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">За що нараховано (Опис):</label>
+                            <input type="text" name="description" class="form-control" placeholder="Наприклад: 5 кг ПЕТ пляшок та 10 кг макулатури" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success w-100 fs-5"><i class="fa-solid fa-plus-circle"></i> Нарахувати бали</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% if messages %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for message in messages %}
+            Swal.fire({
+                icon: '{% if message.tags == "error" %}error{% else %}success{% endif %}',
+                title: '{% if message.tags == "error" %}Помилка!{% else %}Успіх!{% endif %}',
+                text: '{{ message|escapejs }}',
+                confirmButtonColor: '#198754'
+            });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+{% endblock %}

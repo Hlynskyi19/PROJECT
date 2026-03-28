@@ -1,0 +1,104 @@
+{% extends 'main/layout.html' %} 
+
+{% block title %}Головна - EcoBonus{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    
+    <h2 class="mb-4">Головна панель EcoBonus</h2>
+    {% if user.is_authenticated %}
+        <div class="alert alert-success shadow mb-5 border border-success-subtle rounded-4 p-4 fs-5" style="background-color: rgba(25, 135, 84, 0.08); color: var(--bs-success);">
+            <i class="fa-solid fa-leaf me-2 fa-lg"></i> Привіт, <strong>{{ user.username }}</strong>! Твій поточний баланс: <strong>{{ user.userprofile.balance }} еко-балів</strong>.
+        </div>
+    {% else %}
+        <div class="alert alert-primary shadow mb-5 border border-primary-subtle rounded-4 p-4 fs-5" style="background-color: rgba(13, 110, 253, 0.08); color: var(--bs-primary);">
+            <i class="fa-solid fa-circle-info me-2 fa-lg"></i> Увійдіть у систему, щоб накопичувати бали за здачу вторсировини та обмінювати їх на винагороди.
+        </div>
+    {% endif %}
+
+    <div class="p-5 mb-5 bg-body rounded-4 shadow border border-success-subtle border-start border-success border-5">
+        <div class="container-fluid py-2">
+            <h1 class="display-5 fw-bold text-success"><i class="fa-solid fa-leaf"></i> EcoBonus</h1>
+            <p class="col-md-10 fs-5 mt-3 text-muted">
+                Інноваційна інформаційна система для екологічного сортування та переробки відходів. 
+                Ми перетворюємо рутину сортування сміття на захопливий процес із реальними винагородами, роблячи наше довкілля чистішим.
+            </p>
+        </div>
+    </div>
+
+    <h3 class="mb-4 text-secondary"><i class="fa-solid fa-gears"></i> Як працює система?</h3>
+    <div class="row text-center mb-5">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow border border-success-subtle bg-body rounded-4">
+                <div class="card-body mt-3">
+                    <div class="text-success mb-3">
+                        <i class="fa-solid fa-map-location-dot fa-3x"></i>
+                    </div>
+                    <h5 class="fw-bold">1. Знайдіть пункт</h5>
+                    <p class="text-muted">Відкрийте інтерактивну карту та знайдіть найближчий пункт прийому вторсировини, перевіривши графік його роботи.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow border border-warning-subtle bg-body rounded-4">
+                <div class="card-body mt-3">
+                    <div class="text-warning mb-3">
+                        <i class="fa-solid fa-coins fa-3x"></i>
+                    </div>
+                    <h5 class="fw-bold">2. Отримайте еко-бали</h5>
+                    <p class="text-muted">Здайте макулатуру, пластик або скло та отримайте миттєве нарахування балів на ваш захищений віртуальний баланс.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow border border-danger-subtle bg-body rounded-4">
+                <div class="card-body mt-3">
+                    <div class="text-danger mb-3">
+                        <i class="fa-solid fa-gift fa-3x"></i>
+                    </div>
+                    <h5 class="fw-bold">3. Заберіть винагороду</h5>
+                    <p class="text-muted">Обміняйте накопичені бали у нашому магазині на знижки, квитки у кіно або стильні еко-торби.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h3 class="mb-4"><i class="fa-solid fa-earth-europe text-primary"></i> Карта пунктів прийому</h3>
+    <div class="card shadow border-0 mb-5 bg-body rounded-3">
+        <div class="card-body p-0">
+            <div id="map" style="height: 550px; width: 100%; border-radius: 0.375rem;"></div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<script>
+    // Ініціалізація карти (Координати Рівного)
+    var map = L.map('map').setView([50.6199, 26.2516], 13);
+
+    // Підключення безкоштовних тайлів від OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Отримуємо JSON з нашими точками з бекенду Django
+    // Обертаємо змінну Django в одинарні лапки, щоб VS Code бачив це як звичайний текст,
+    // а потім перетворюємо цей текст у масив за допомогою JSON.parse
+    var points = JSON.parse('{{ points_json|escapejs }}');
+    
+    // Розставляємо маркери циклом
+    points.forEach(function(point) {
+        // Формуємо посилання на сторінку пункту
+        var link = "<br><br><a href='/point/" + point.id + "' class='btn btn-sm btn-success text-white w-100' style='text-decoration: none;'>Відгуки та деталі</a>";
+        
+        L.marker([point.lat, point.lon])
+            .addTo(map)
+            .bindPopup("<div class='text-center'><b>" + point.name + "</b><br><span class='text-muted' style='font-size: 0.9em;'>" + point.address + "</span>" + link + "</div>");
+    });
+</script>
+{% endblock %}

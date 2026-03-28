@@ -1,0 +1,191 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Реєстрація - EcoBonus{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            
+            <div class="card rounded-4 shadow-sm border-0 bg-body">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="text-center mb-4">
+                        <i class="fa-solid fa-leaf fa-3x text-success mb-2 opacity-75"></i>
+                        <h2 class="fw-bold text-success mb-1">EcoBonus</h2>
+                        <h4 class="text-secondary fw-normal">Новий акаунт</h4>
+                        <p class="text-muted mt-2 mx-auto" style="max-width: 400px;">
+                            Створіть свій профіль, щоб накопичувати еко-бали за здачу вторсировини та обмінювати їх на винагороди.
+                        </p>
+                    </div>
+
+                    <form method="post" action="{% url 'register' %}" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger rounded-3" role="alert">
+                                {% for error in form.non_field_errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-floating mb-3">
+                            {{ form.username }} <label for="{{ form.username.id_for_label }}"><i class="fa-solid fa-user me-2 opacity-50"></i>Логін</label>
+                            {% if form.username.errors %}
+                                <div class="text-danger small ms-2 mt-1">
+                                    {% for error in form.username.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            {{ form.email }}
+                            <label for="{{ form.email.id_for_label }}"><i class="fa-solid fa-envelope me-2 opacity-50"></i>Електронна пошта</label>
+                            {% if form.email.errors %}
+                                <div class="text-danger small ms-2 mt-1">
+                                    {% for error in form.email.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                       <div class="mb-3">
+                            <div class="input-group">
+                                <div class="form-floating flex-grow-1">
+                                    {{ form.password1 }}
+                                    <label for="{{ form.password1.id_for_label }}"><i class="fa-solid fa-lock me-2 opacity-50"></i>Пароль</label>
+                                </div>
+                                <button class="btn btn-outline-secondary rounded-end border-success-subtle" type="button" id="togglePasswordMain" style="background: transparent;">
+                                    <i class="fa-solid fa-eye text-success opacity-75" id="eyeIconMain"></i>
+                                </button>
+                            </div>
+                            
+                            {% if form.password1.errors %}
+                                <div class="text-danger small ms-2 mt-2 fw-bold">
+                                    {% for error in form.password1.errors %}
+                                        <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}<br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            <div class="small text-muted mt-2 ms-2 p-2 rounded-3 border border-success-subtle bg-body-tertiary" id="password-validation-checks" style="font-size: 0.85rem;">
+                                <div class="check-item-text mb-1 fw-medium text-success opacity-75">Вимоги до паролю:</div>
+                                <div id="check-length" class="check-item text-danger">
+                                    <i class="fa-solid fa-circle-xmark me-1 opacity-75"></i> Мінімум 8 символів
+                                </div>
+                                <div id="check-uppercase" class="check-item text-danger">
+                                    <i class="fa-solid fa-circle-xmark me-1 opacity-75"></i> Принаймні одна велика літера (A-Z)
+                                </div>
+                                <div id="check-number" class="check-item text-danger">
+                                    <i class="fa-solid fa-circle-xmark me-1 opacity-75"></i> Принаймні одна цифра (0-9)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            {{ form.password2 }}
+                            <label for="{{ form.password2.id_for_label }}"><i class="fa-solid fa-lock me-2 opacity-50"></i>Підтвердьте пароль</label>
+                            
+                            {% if form.password2.errors %}
+                                <div class="text-danger small ms-2 mt-2 fw-bold">
+                                    {% for error in form.password2.errors %}
+                                        <i class="fa-solid fa-triangle-exclamation"></i> {{ error }}<br>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mt-4 mb-3">
+                            <button type="submit" class="btn btn-success btn-lg w-100 rounded-pill shadow-sm" style="transition: 0.3s;" id="submitBtn">
+                                Створити еко-акаунт
+                            </button>
+                        </div>
+
+                        <div class="text-center mt-3">
+                            <p class="text-muted small mb-0">Вже маєте акаунт?</p>
+                            <a href="{% url 'login' %}" class="btn btn-outline-success btn-sm rounded-pill mt-1">
+                                <i class="fa-solid fa-right-to-bracket me-2"></i>Увійти
+                            </a>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div> </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        
+        // --- 1. ПЕРЕВІРКА ПОЛОЖЕННЯ ЕЛЕМЕНТІВ Django Forms ---
+        // Django автоматично додає IDs. Нам потрібно знайти їх у нашому HTML.
+        // Зазвичай це `id_username`, `id_email`, `id_password1`, `id_password2`.
+        
+        // ВАЖЛИВО: Оскільки ми виводимо полях форми вручну ({{ form.username }}), 
+        // Django автоматично рендерить їх із цими ID. Ми можемо використовувати їх безпосередньо.
+
+        const passwordInput = document.getElementById('id_password1');
+        const passwordValidationChecks = document.getElementById('password-validation-checks');
+        const submitBtn = document.getElementById('submitBtn');
+
+        // Елементи умов
+        const checkLength = document.getElementById('check-length');
+        const checkUppercase = document.getElementById('check-uppercase');
+        const checkNumber = document.getElementById('check-number');
+
+        // Іконки
+        const xMarkIcon = 'fa-solid fa-circle-xmark me-1 opacity-75';
+        const checkMarkIcon = 'fa-solid fa-circle-check me-1 opacity-75';
+
+
+        // --- 2. ЛОГІКА ІКОНКИ "ОКА" (Show/Hide Password) ---
+        const togglePasswordMain = document.getElementById('togglePasswordMain');
+        const eyeIconMain = document.getElementById('eyeIconMain');
+
+        togglePasswordMain.addEventListener('click', function() {
+            // Перемикаємо тип input (з password на text і навпаки)
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // Змінюємо іконку (fa-eye на fa-eye-slash)
+            eyeIconMain.classList.toggle('fa-eye');
+            eyeIconMain.classList.toggle('fa-eye-slash');
+        });
+
+
+        // --- 3. ДИНАМІЧНА ПЕРЕВІРКА ПАРОЛЮ НА ХОДУ (Live Validation) ---
+        
+        const updateCheckStatus = (element, condition) => {
+            if (condition) {
+                // Умова виконана -> Зелений
+                element.classList.remove('text-danger');
+                element.classList.add('text-success');
+                element.innerHTML = `<i class="${checkMarkIcon}"></i> ${element.innerText.trim()}`;
+            } else {
+                // Умова не виконана -> Червоний
+                element.classList.remove('text-success');
+                element.classList.add('text-danger');
+                element.innerHTML = `<i class="${xMarkIcon}"></i> ${element.innerText.trim()}`;
+            }
+        };
+
+        // Функція, яка запускається щоразу, коли користувач вводить символ
+        passwordInput.addEventListener('input', function() {
+            const val = this.value;
+
+            // Визначаємо умови за допомогою регулярних виразів
+            const hasLength = val.length >= 8;
+            const hasUppercase = /[A-Z]/.test(val); // Містить А-Я або A-Z (Django forms typically handle both)
+            const hasNumber = /[0-9]/.test(val);
+
+            // Оновлюємо статус кожної умови
+            updateCheckStatus(checkLength, hasLength);
+            updateCheckStatus(checkUppercase, hasUppercase);
+            updateCheckStatus(checkNumber, hasNumber);
+        });
+
+    });
+</script>
+
+{% endblock %}

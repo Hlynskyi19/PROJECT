@@ -1,0 +1,135 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Налаштування - EcoBonus{% endblock %}
+
+{% block content %}
+<div class="container py-4 mb-5">
+    <h2 class="mb-4 fw-bold"><i class="fa-solid fa-user-gear text-secondary me-2"></i> Налаштування профілю</h2>
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="card rounded-4 shadow-sm border-0 bg-body h-100">
+                <div class="card-header bg-transparent border-bottom border-success-subtle p-4">
+                    <h5 class="mb-0 fw-bold text-success"><i class="fa-solid fa-id-card me-2"></i> Особисті дані</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        <div class="row">
+                            {% if user.userprofile.is_partner %}
+                                <div class="col-md-12 form-floating mb-3">
+                                    {{ u_form.first_name }}
+                                    <label class="ms-2" for="{{ u_form.first_name.id_for_label }}">
+                                        <i class="fa-solid fa-building me-2 opacity-50"></i> Назва організації
+                                    </label>
+                                </div>
+                                <div class="d-none">
+                                    {{ u_form.last_name }}
+                                </div>
+                            {% else %}
+                                <div class="col-md-6 form-floating mb-3">
+                                    {{ u_form.first_name }}
+                                    <label class="ms-2" for="{{ u_form.first_name.id_for_label }}">Ім'я</label>
+                                </div>
+                                <div class="col-md-6 form-floating mb-3">
+                                    {{ u_form.last_name }}
+                                    <label class="ms-2" for="{{ u_form.last_name.id_for_label }}">Прізвище</label>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            {{ u_form.email }}
+                            <label for="{{ u_form.email.id_for_label }}"><i class="fa-solid fa-envelope me-2 opacity-50"></i> Email</label>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 form-floating mb-4">
+                                {{ p_form.phone_number }}
+                                <label class="ms-2" for="{{ p_form.phone_number.id_for_label }}"><i class="fa-solid fa-phone me-2 opacity-50"></i> Телефон</label>
+                            </div>
+                            <div class="col-md-6 form-floating mb-4">
+                                {{ p_form.birth_date }}
+                                <label class="ms-2" for="{{ p_form.birth_date.id_for_label }}"><i class="fa-solid fa-cake-candles me-2 opacity-50"></i> Дата народження</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" name="update_profile" class="btn btn-success rounded-pill px-4 shadow-sm w-100 w-md-auto">
+                            <i class="fa-solid fa-floppy-disk me-2"></i> Зберегти дані
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-5">
+            <div class="card rounded-4 shadow-sm border-0 bg-body h-100">
+                <div class="card-header bg-transparent border-bottom border-danger-subtle p-4">
+                    <h5 class="mb-0 fw-bold text-danger"><i class="fa-solid fa-shield-halved me-2"></i> Зміна пароля</h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        
+                        {% for field in pass_form %}
+                            <div class="mb-3">
+                                <div class="input-group">
+                                    <div class="form-floating flex-grow-1">
+                                        {{ field }}
+                                        <label for="{{ field.id_for_label }}"><i class="fa-solid fa-key me-2 opacity-50"></i> {{ field.label }}</label>
+                                    </div>
+                                    <button class="btn btn-outline-secondary rounded-end border-danger-subtle toggle-password" type="button" style="background: transparent;">
+                                        <i class="fa-solid fa-eye text-danger opacity-75"></i>
+                                    </button>
+                                </div>
+                                {% if field.errors %}
+                                    <div class="text-danger small mt-1 fw-bold">{{ field.errors|striptags }}</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+
+                        <button type="submit" name="change_password" class="btn btn-danger rounded-pill px-4 shadow-sm w-100 mt-2">
+                            <i class="fa-solid fa-lock me-2"></i> Оновити пароль
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Стилізація полів Django
+        const passInputs = document.querySelectorAll('.col-lg-5 input[type="password"]');
+        passInputs.forEach(input => {
+            input.classList.add('form-control', 'border-danger-subtle', 'bg-transparent');
+            input.setAttribute('placeholder', ' ');
+        });
+
+        // 2. Логіка для всіх кнопок "Око"
+        const toggleButtons = document.querySelectorAll('.toggle-password');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Знаходимо поле input, яке лежить поруч із цією конкретною кнопкою
+                const inputWrapper = this.previousElementSibling;
+                const input = inputWrapper.querySelector('input');
+                const icon = this.querySelector('i');
+                
+                // Перемикаємо тип і іконку
+                if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                } else {
+                    input.type = 'password';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

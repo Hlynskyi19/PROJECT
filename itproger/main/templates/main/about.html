@@ -1,0 +1,102 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Про проєкт - EcoBonus{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    
+    <div class="p-5 mb-5 bg-body rounded-4 shadow border border-success-subtle border-start border-success border-5">
+        <div class="container-fluid py-2">
+            <h1 class="display-5 fw-bold text-success"><i class="fa-solid fa-leaf"></i> EcoBonus</h1>
+            <p class="col-md-10 fs-5 mt-3 text-muted">
+                Інноваційна інформаційна система для екологічного сортування та переробки відходів. 
+                Ми перетворюємо рутину сортування сміття на захопливий процес із реальними винагородами, роблячи наше довкілля чистішим.
+            </p>
+        </div>
+    </div>
+
+    <h3 class="mb-4 text-secondary"><i class="fa-solid fa-gears"></i> Як працює система?</h3>
+    <div class="row text-center mb-5">
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow border border-success-subtle bg-body rounded-4">
+                <div class="card-body mt-3">
+                    <div class="text-success mb-3">
+                        <i class="fa-solid fa-map-location-dot fa-3x"></i>
+                    </div>
+                    <h5 class="fw-bold">1. Знайдіть пункт</h5>
+                    <p class="text-muted">Відкрийте інтерактивну карту та знайдіть найближчий пункт прийому вторсировини, перевіривши графік його роботи.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow border border-warning-subtle bg-body rounded-4">
+                <div class="card-body mt-3">
+                    <div class="text-warning mb-3">
+                        <i class="fa-solid fa-coins fa-3x"></i>
+                    </div>
+                    <h5 class="fw-bold">2. Отримайте еко-бали</h5>
+                    <p class="text-muted">Здайте макулатуру, пластик або скло та отримайте миттєве нарахування балів на ваш захищений віртуальний баланс.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card h-100 shadow border border-danger-subtle bg-body rounded-4">
+                <div class="card-body mt-3">
+                    <div class="text-danger mb-3">
+                        <i class="fa-solid fa-gift fa-3x"></i>
+                    </div>
+                    <h5 class="fw-bold">3. Заберіть винагороду</h5>
+                    <p class="text-muted">Обміняйте накопичені бали у нашому магазині на знижки, квитки у кіно або стильні еко-торби.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow border-0 rounded-4" style="background: linear-gradient(135deg, #1b4332 0%, #2d6a4f 100%); color: white;">
+        <div class="card-body p-4 d-flex align-items-center">
+            <div class="me-4 d-none d-md-block">
+                <i class="fa-solid fa-laptop-code fa-5x opacity-75"></i>
+            </div>
+            <div>
+                <h4 class="mb-2 fw-bold">Розробка системи</h4>
+                <p class="mb-1" style="color: #d8f3dc;">
+                    Проєкт "EcoBonus" побудований з використанням фреймворку Django (Python), реляційної бази даних, Bootstrap 5 та інтерактивних карт Leaflet.
+                </p>
+                <hr style="border-color: rgba(255,255,255,0.2);">
+                <p class="mb-3">
+                    <i class="fa-solid fa-user-graduate me-2"></i><strong>Розробники:</strong> Глинський Дмитро Олександрович та Корнійчук Михайло Вячеславович
+                </p>
+                
+                <div class="d-flex flex-wrap gap-3">
+                    <div class="bg-dark bg-opacity-25 rounded-3 p-2 px-3 border border-light border-opacity-10 shadow-sm" style="transition: 0.3s;">
+                        <small class="d-block text-uppercase mb-1 fw-bold" style="font-size: 0.65rem; color: #d8f3dc; letter-spacing: 0.5px;">Контакти Дмитра</small>
+                        <div class="d-flex align-items-center">
+                            <a href="tel:+380688455594" class="text-white text-decoration-none me-3" style="font-size: 0.9rem;">
+                                <i class="fa-solid fa-phone me-1 opacity-75"></i> +38 (068) 845-55-94
+                            </a>
+                            <a href="https://t.me/Dimon8910" target="_blank" class="text-white text-decoration-none" style="font-size: 0.9rem;">
+                                <i class="fa-brands fa-telegram fa-lg text-info me-1"></i> Telegram
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="bg-dark bg-opacity-25 rounded-3 p-2 px-3 border border-light border-opacity-10 shadow-sm" style="transition: 0.3s;">
+                        <small class="d-block text-uppercase mb-1 fw-bold" style="font-size: 0.65rem; color: #d8f3dc; letter-spacing: 0.5px;">Контакти Михайла</small>
+                        <div class="d-flex align-items-center">
+                            <a href="tel:+380970268517" class="text-white text-decoration-none me-3" style="font-size: 0.9rem;">
+                                <i class="fa-solid fa-phone me-1 opacity-75"></i> +38 (097) 026-85-17
+                            </a>
+                            <a href="https://t.me/korniichukmichael" target="_blank" class="text-white text-decoration-none" style="font-size: 0.9rem;">
+                                <i class="fa-brands fa-telegram fa-lg text-info me-1"></i> Telegram
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div> </div> </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
