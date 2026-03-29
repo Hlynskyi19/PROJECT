@@ -4,7 +4,6 @@
 
 {% block content %}
 <div class="container mt-4 mb-5">
-    
     <h2 class="mb-4">
         {% if user.userprofile.is_partner %}
             <i class="fa-solid fa-building text-success me-2"></i> Панель організації: {{ user.username }}
@@ -14,23 +13,22 @@
     </h2>
 
     <div class="row g-4">
-        
-        <div class="col-md-4">
+<div class="col-md-4">
             {% if user.userprofile.is_partner %}
-                <div class="card shadow-sm border-0 bg-body rounded-3 h-100 text-center p-4 border-success border-top border-4">
+                <div class="card shadow-sm border-0 bg-body rounded-3 text-center p-4 border-success border-top border-4">
                     <h5 class="text-muted mb-3">Управління пунктом</h5>
                     <i class="fa-solid fa-building-circle-check fa-4x text-success mb-3 opacity-75"></i>
                     <p class="text-muted small mb-4">Тут ви можете нараховувати еко-бали клієнтам за здану вторсировину.</p>
-                    <a href="{% url 'partner_panel' %}" class="btn btn-success w-100 rounded-pill shadow-sm mt-auto">
+                    <a href="{% url 'partner_panel' %}" class="btn btn-success w-100 rounded-pill shadow-sm">
                         <i class="fa-solid fa-plus-circle me-2"></i> Нарахувати бали
                     </a>
                 </div>
             {% else %}
-                <div class="card shadow-sm border-0 bg-body rounded-3 h-100 text-center p-4">
+                <div class="card shadow-sm border-0 bg-body rounded-3 text-center p-4">
                     <h5 class="text-muted mb-3">Ваш баланс</h5>
                     <h1 class="display-3 fw-bold text-success mb-0">{{ profile.balance }}</h1>
                     <p class="text-muted mb-4">еко-балів</p>
-                    <a href="{% url 'rewards' %}" class="btn btn-success w-100 rounded-pill shadow-sm mt-auto">
+                    <a href="{% url 'rewards' %}" class="btn btn-success w-100 rounded-pill shadow-sm">
                         <i class="fa-solid fa-cart-shopping me-2"></i> Витратити бали
                     </a>
                 </div>
@@ -52,15 +50,13 @@
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover mb-0 align-middle">
-                           <thead class="bg-body-tertiary">
+                            <thead class="bg-body-tertiary">
                                 <tr>
                                     <th class="text-muted fw-semibold py-3 ps-3">Дата</th>
                                     <th class="text-muted fw-semibold py-3">Тип</th>
-                                    
                                     {% if user.userprofile.is_partner %}
                                         <th class="text-muted fw-semibold py-3">Кому (Клієнт)</th>
                                     {% endif %}
-                                    
                                     <th class="text-muted fw-semibold py-3">Опис</th>
                                     <th class="text-muted fw-semibold py-3 pe-3 text-end">Сума</th>
                                 </tr>
@@ -76,13 +72,11 @@
                                             <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle"><i class="fa-solid fa-arrow-up me-1"></i> Списання</span>
                                         {% endif %}
                                     </td>
-                                    
                                     {% if user.userprofile.is_partner %}
                                         <td class="fw-medium text-dark">
                                             <i class="fa-solid fa-user text-success opacity-50 me-1"></i> {{ tx.user.user.username }}
                                         </td>
                                     {% endif %}
-                                    
                                     <td class="text-muted">{{ tx.description }}</td>
                                     <td class="pe-3 text-end">
                                         {% if tx.transaction_type == 'EARN' %}
@@ -107,46 +101,14 @@
                                 </tr>
                                 {% endfor %}
                             </tbody>
-                                {% for tx in transactions %}
-                                <tr>
-                                    <td class="ps-3">{{ tx.created_at|date:"d.m.Y H:i" }}</td>
-                                    <td>
-                                        {% if tx.transaction_type == 'EARN' %}
-                                            <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle"><i class="fa-solid fa-arrow-down me-1"></i> Нарахування</span>
-                                        {% else %}
-                                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger-subtle"><i class="fa-solid fa-arrow-up me-1"></i> Списання</span>
-                                        {% endif %}
-                                    </td>
-                                    <td class="text-muted">{{ tx.description }}</td>
-                                    <td class="pe-3 text-end">
-                                        {% if tx.transaction_type == 'EARN' %}
-                                            <strong class="text-success fs-5">+{{ tx.amount }}</strong>
-                                        {% else %}
-                                            <strong class="text-danger fs-5">-{{ tx.amount }}</strong>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="4" class="text-center py-5 text-muted border-0">
-                                        <i class="fa-solid fa-leaf fa-3x mb-3 opacity-50"></i>
-                                        <p class="mb-0 fs-5">
-                                            {% if user.userprofile.is_partner %}
-                                                Ви ще не нараховували бали жодному клієнту.
-                                            {% else %}
-                                                У вас ще немає транзакцій. Здайте вторсировину, щоб отримати перші бали!
-                                            {% endif %}
-                                        </p>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
                         </table>
                     </div>
                 </div>
             </div>
         </div>
-    </div> {% if not user.userprofile.is_partner %}
+    </div>
+
+    {% if not user.userprofile.is_partner %}
         <h4 class="mt-5 mb-4 fw-bold">
             <i class="fa-solid fa-ticket text-secondary me-2"></i> Ваші придбані промокоди
         </h4>
@@ -157,10 +119,8 @@
                 <div class="card shadow-sm text-center border-0 bg-body rounded-4 h-100">
                     <div class="card-body p-4 d-flex flex-column">
                         <h6 class="card-title text-muted mb-3">{{ item.reward_name }}</h6>
-                        
                         <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ item.promo_code }}" 
                              alt="QR Code" class="img-fluid mb-3 mx-auto" style="max-width: 120px;">
-                        
                         <div class="p-2 mt-auto bg-body-tertiary border border-success-subtle rounded-3">
                             <strong class="fs-5 font-monospace text-success" style="letter-spacing: 2px;">{{ item.promo_code }}</strong>
                         </div>
@@ -184,6 +144,5 @@
             {% endfor %}
         </div>
     {% endif %}
-
 </div>
 {% endblock %}

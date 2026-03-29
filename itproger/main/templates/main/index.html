@@ -11,12 +11,23 @@
 <div class="container mt-4 mb-5">
     
     <h2 class="mb-4">Головна панель EcoBonus</h2>
-    {% if user.is_authenticated %}
-        <div class="alert alert-success shadow mb-5 border border-success-subtle rounded-4 p-4 fs-5" style="background-color: rgba(25, 135, 84, 0.08); color: var(--bs-success);">
-            <i class="fa-solid fa-leaf me-2 fa-lg"></i> Привіт, <strong>{{ user.username }}</strong>! Твій поточний баланс: <strong>{{ user.userprofile.balance }} еко-балів</strong>.
-        </div>
+    
+{% if user.is_authenticated %}
+        {% if user.userprofile.is_partner %}
+            <div class="alert alert-success shadow-sm mb-5 rounded-4 p-4 fs-5">
+                <i class="fa-solid fa-building-circle-check me-2 fa-lg"></i>
+                Привіт, <strong>{{ user.username }}</strong>! Ви увійшли як панель організації.
+                <a href="{% url 'partner_panel' %}" class="alert-link fw-bold ms-3">
+                    Перейти до управління <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        {% else %}
+            <div class="alert alert-success shadow-sm mb-5 rounded-4 p-4 fs-5">
+                <i class="fa-solid fa-leaf me-2 fa-lg"></i> Привіт, <strong>{{ user.username }}</strong>! Твій поточний баланс: <strong>{{ balance }} еко-балів</strong>.
+            </div>
+        {% endif %}
     {% else %}
-        <div class="alert alert-primary shadow mb-5 border border-primary-subtle rounded-4 p-4 fs-5" style="background-color: rgba(13, 110, 253, 0.08); color: var(--bs-primary);">
+        <div class="alert alert-primary shadow-sm mb-5 rounded-4 p-4 fs-5">
             <i class="fa-solid fa-circle-info me-2 fa-lg"></i> Увійдіть у систему, щоб накопичувати бали за здачу вторсировини та обмінювати їх на винагороди.
         </div>
     {% endif %}
@@ -74,10 +85,8 @@
             <div id="map" style="height: 550px; width: 100%; border-radius: 0.375rem;"></div>
         </div>
     </div>
-    </div>
-</div>
 
-<script>
+</div> <script>
     // Ініціалізація карти (Координати Рівного)
     var map = L.map('map').setView([50.6199, 26.2516], 13);
 
@@ -87,8 +96,6 @@
     }).addTo(map);
 
     // Отримуємо JSON з нашими точками з бекенду Django
-    // Обертаємо змінну Django в одинарні лапки, щоб VS Code бачив це як звичайний текст,
-    // а потім перетворюємо цей текст у масив за допомогою JSON.parse
     var points = JSON.parse('{{ points_json|escapejs }}');
     
     // Розставляємо маркери циклом
