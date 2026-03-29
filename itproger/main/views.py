@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import json
 from django.contrib.auth.decorators import login_required
-from .models import RecyclingPoint, UserProfile, Review, Transaction, UserReward
+from .models import RecyclingPoint, UserProfile, Review, Transaction, UserReward, StoreOffer
 from django.contrib import messages
 from .services import spend_eco_points
 import uuid
@@ -117,29 +117,40 @@ def rewards(request):
     
     # Якщо користувач натиснув кнопку "Обміняти"
     if request.method == 'POST':
-        reward_name = request.POST.get('reward_name')
-        cost = int(request.POST.get('cost'))
+        # Отримуємо ID пропозиції, яку хоче купити користувач
+        offer_id = request.POST.get('offer_id')
         
         try:
-            # Списуємо бали
-            spend_eco_points(profile, cost, f"Придбано: {reward_name}")
+            # Знаходимо саму пропозицію в базі
+            offer = get_object_or_404(StoreOffer, id=offer_id)
+            
+            # Списуємо бали (вартість беремо з бази даних!)
+            spend_eco_points(profile, offer.cost, f"Придбано: {offer.title}")
             
             # Генеруємо унікальний промокод (8 випадкових символів)
             new_code = uuid.uuid4().hex[:8].upper()
             
-            # Зберігаємо його в базу даних
+            # Зберігаємо покупку і ПРИВ'ЯЗУЄМО її до конкретної пропозиції (offer=offer)
             UserReward.objects.create(
                 user=request.user,
-                reward_name=reward_name,
+                offer=offer,  # <--- Цей рядок передасть промокод у панель магазину
+                reward_name=offer.title,
                 promo_code=new_code
             )
             
-            # Виводимо повідомлення
-            messages.success(request, f"Ви успішно придбали '{reward_name}'. Ваш код збережено в кабінеті!")
+            messages.success(request, f"Ви успішно придбали '{offer.title}'. Ваш код збережено в кабінеті!")
         except ValueError as e:
             messages.error(request, str(e))
-        
-    return render(request, 'main/rewards.html', {'balance': profile.balance})
+        except Exception as e:
+            messages.error(request, "Сталася помилка при обміні балів.")
+            
+    # Дістаємо всі АКТИВНІ пропозиції від усіх магазинів
+    active_offers = StoreOffer.objects.filter(is_active=True).order_by('-created_at')
+    
+    return render(request, 'main/rewards.html', {
+        'balance': profile.balance,
+        'offers': active_offers  # Передаємо їх у шаблон
+    })
 
 @login_required
 def partner_panel(request):
@@ -217,3 +228,54 @@ def settings_view(request):
         'pass_form': pass_form
     }
     return render(request, 'main/settings.html', context)
+
+@login_required
+def store_panel(request):
+    profile = request.user.userprofile
+    
+    # Перевіряємо, чи має користувач права магазину
+    if not profile.is_store:
+        messages.error(request, "У вас немає доступу до панелі партнера-магазину.")
+        return redirect('home')
+        
+    # Якщо магазин додає нову пропозицію (товар)
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        description = request.POST.get('description', '')
+        cost = request.POST.get('cost')
+        
+        if title and cost:
+            StoreOffer.objects.create(
+                store=request.user,
+                title=title,
+                description=description,
+                cost=int(cost)
+            )
+            messages.success(request, f"Пропозицію '{title}' успішно додано до магазину!")
+        else:
+            messages.error(request, "Будь ласка, заповніть назву та вартість.")
+            
+        return redirect('store_panel')
+        
+    # Отримуємо всі пропозиції цього магазину
+    my_offers = StoreOffer.objects.filter(store=request.user).order_by('-created_at')
+    
+    # Отримуємо всі куплені ПРОМОКОДИ на товари САМЕ ЦЬОГО магазину
+    purchased_codes = UserReward.objects.filter(offer__store=request.user).order_by('-purchased_at')
+    
+    return render(request, 'main/store_panel.html', {
+        'my_offers': my_offers,
+        'purchased_codes': purchased_codes
+    })
+
+@login_required
+def delete_offer(request, offer_id):
+    # Видаляти можна тільки методом POST (це стандарт безпеки, щоб уникнути випадкових видалень через посилання)
+    if request.method == 'POST':
+        # Шукаємо пропозицію. ВАЖЛИВО: store=request.user гарантує, що чужий магазин не видалить цю пропозицію!
+        offer = get_object_or_404(StoreOffer, id=offer_id, store=request.user)
+        title = offer.title
+        offer.delete()
+        messages.success(request, f"Пропозицію '{title}' успішно видалено.")
+        
+    return redirect('store_panel')

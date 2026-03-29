@@ -21,6 +21,14 @@
                     Перейти до управління <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
+        {% elif user.userprofile.is_store %}
+            <div class="alert alert-success shadow-sm mb-5 rounded-4 p-4 fs-5">
+                <i class="fa-solid fa-store text-success me-2 fa-lg"></i>
+                Привіт, <strong>{{ user.username }}</strong>! Ви увійшли як магазин-партнер.
+                <a href="{% url 'store_panel' %}" class="alert-link fw-bold ms-3">
+                    Перейти до панелі магазину <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
         {% else %}
             <div class="alert alert-success shadow-sm mb-5 rounded-4 p-4 fs-5">
                 <i class="fa-solid fa-leaf me-2 fa-lg"></i> Привіт, <strong>{{ user.username }}</strong>! Твій поточний баланс: <strong>{{ balance }} еко-балів</strong>.
@@ -31,7 +39,7 @@
             <i class="fa-solid fa-circle-info me-2 fa-lg"></i> Увійдіть у систему, щоб накопичувати бали за здачу вторсировини та обмінювати їх на винагороди.
         </div>
     {% endif %}
-
+    
     <div class="p-5 mb-5 bg-body rounded-4 shadow border border-success-subtle border-start border-success border-5">
         <div class="container-fluid py-2">
             <h1 class="display-5 fw-bold text-success"><i class="fa-solid fa-leaf"></i> EcoBonus</h1>

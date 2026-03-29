@@ -75,10 +75,21 @@
                 {% endif %}
 
                 <li class="nav-item mb-2">
-                    <a href="{% url 'profile' %}" class="nav-link text-white rounded" style="background-color: rgba(255,255,255,0.1);">
-                        <i class="fa-solid fa-user-circle me-2"></i> Кабінет ({{ user.username }})
-                    </a>
+                    {% if user.userprofile.is_partner %}
+                        <a href="{% url 'partner_panel' %}" class="nav-link text-white mb-2 p-2 rounded-3" style="background-color: rgba(25, 135, 84, 0.2);">
+                            <i class="fa-solid fa-building-circle-check me-2"></i> Панель організації
+                        </a>
+                    {% elif user.userprofile.is_store %}
+                        <a href="{% url 'store_panel' %}" class="nav-link text-white mb-2 p-2 rounded-3" style="background-color: rgba(25, 135, 84, 0.2);">
+                            <i class="fa-solid fa-store me-2"></i> Панель магазину
+                        </a>
+                    {% else %}
+                        <a href="{% url 'profile' %}" class="nav-link text-white mb-2 p-2 rounded-3" style="background-color: rgba(255, 255, 255, 0.1);">
+                            <i class="fa-solid fa-circle-user me-2"></i> Кабінет ({{ user.username }})
+                        </a>
+                    {% endif %}
                 </li>
+                
                 <li class="nav-item mb-2">
                     <a href="{% url 'settings' %}" class="nav-link text-white rounded" style="background-color: rgba(255,255,255,0.05);">
                         <i class="fa-solid fa-gear me-2"></i> Налаштування

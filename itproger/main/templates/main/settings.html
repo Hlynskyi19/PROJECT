@@ -3,14 +3,16 @@
 {% block title %}Налаштування - EcoBonus{% endblock %}
 
 {% block content %}
-<div class="container py-4 mb-5">
-    <h2 class="mb-4 fw-bold"><i class="fa-solid fa-user-gear text-secondary me-2"></i> Налаштування профілю</h2>
+<div class="container mt-4 mb-5">
+    <h2 class="mb-4"><i class="fa-solid fa-gear text-secondary me-2"></i> Налаштування профілю</h2>
 
     <div class="row g-4">
         <div class="col-lg-7">
-            <div class="card rounded-4 shadow-sm border-0 bg-body h-100">
-                <div class="card-header bg-transparent border-bottom border-success-subtle p-4">
-                    <h5 class="mb-0 fw-bold text-success"><i class="fa-solid fa-id-card me-2"></i> Особисті дані</h5>
+            <div class="card shadow-sm border-0 bg-body rounded-4 h-100 border-success border-top border-4">
+                <div class="card-header bg-transparent border-bottom p-4">
+                    <h5 class="mb-0 fw-bold text-success">
+                        <i class="fa-solid fa-address-card me-2"></i> Особисті дані
+                    </h5>
                 </div>
                 <div class="card-body p-4">
                     <form method="POST">
@@ -24,9 +26,15 @@
                                         <i class="fa-solid fa-building me-2 opacity-50"></i> Назва організації
                                     </label>
                                 </div>
-                                <div class="d-none">
-                                    {{ u_form.last_name }}
+                                <div class="d-none">{{ u_form.last_name }}</div>
+                            {% elif user.userprofile.is_store %}
+                                <div class="col-md-12 form-floating mb-3">
+                                    {{ u_form.first_name }}
+                                    <label class="ms-2" for="{{ u_form.first_name.id_for_label }}">
+                                        <i class="fa-solid fa-store me-2 opacity-50"></i> Назва організації (магазину)
+                                    </label>
                                 </div>
+                                <div class="d-none">{{ u_form.last_name }}</div>
                             {% else %}
                                 <div class="col-md-6 form-floating mb-3">
                                     {{ u_form.first_name }}
@@ -41,21 +49,27 @@
 
                         <div class="form-floating mb-3">
                             {{ u_form.email }}
-                            <label for="{{ u_form.email.id_for_label }}"><i class="fa-solid fa-envelope me-2 opacity-50"></i> Email</label>
+                            <label class="ms-2" for="{{ u_form.email.id_for_label }}">
+                                <i class="fa-solid fa-envelope me-2 opacity-50"></i> Email
+                            </label>
                         </div>
-
+                        
                         <div class="row">
-                            <div class="col-md-6 form-floating mb-4">
+                            <div class="col-md-6 form-floating mb-3">
                                 {{ p_form.phone_number }}
-                                <label class="ms-2" for="{{ p_form.phone_number.id_for_label }}"><i class="fa-solid fa-phone me-2 opacity-50"></i> Телефон</label>
+                                <label class="ms-2" for="{{ p_form.phone_number.id_for_label }}">
+                                    <i class="fa-solid fa-phone me-2 opacity-50"></i> Телефон
+                                </label>
                             </div>
-                            <div class="col-md-6 form-floating mb-4">
+                            <div class="col-md-6 form-floating mb-3">
                                 {{ p_form.birth_date }}
-                                <label class="ms-2" for="{{ p_form.birth_date.id_for_label }}"><i class="fa-solid fa-cake-candles me-2 opacity-50"></i> Дата народження</label>
+                                <label class="ms-2" for="{{ p_form.birth_date.id_for_label }}">
+                                    <i class="fa-solid fa-cake-candles me-2 opacity-50"></i> Дата народження
+                                </label>
                             </div>
                         </div>
-
-                        <button type="submit" name="update_profile" class="btn btn-success rounded-pill px-4 shadow-sm w-100 w-md-auto">
+                        
+                        <button type="submit" name="update_profile" class="btn btn-success w-100 rounded-pill shadow-sm mt-3 py-2">
                             <i class="fa-solid fa-floppy-disk me-2"></i> Зберегти дані
                         </button>
                     </form>
@@ -64,32 +78,34 @@
         </div>
 
         <div class="col-lg-5">
-            <div class="card rounded-4 shadow-sm border-0 bg-body h-100">
-                <div class="card-header bg-transparent border-bottom border-danger-subtle p-4">
-                    <h5 class="mb-0 fw-bold text-danger"><i class="fa-solid fa-shield-halved me-2"></i> Зміна пароля</h5>
+            <div class="card shadow-sm border-0 bg-body rounded-4 h-100 border-danger border-top border-4">
+                <div class="card-header bg-transparent border-bottom p-4">
+                    <h5 class="mb-0 fw-bold text-danger">
+                        <i class="fa-solid fa-lock me-2"></i> Зміна пароля
+                    </h5>
                 </div>
                 <div class="card-body p-4">
                     <form method="POST">
                         {% csrf_token %}
                         
                         {% for field in pass_form %}
-                            <div class="mb-3">
-                                <div class="input-group">
-                                    <div class="form-floating flex-grow-1">
-                                        {{ field }}
-                                        <label for="{{ field.id_for_label }}"><i class="fa-solid fa-key me-2 opacity-50"></i> {{ field.label }}</label>
-                                    </div>
-                                    <button class="btn btn-outline-secondary rounded-end border-danger-subtle toggle-password" type="button" style="background: transparent;">
-                                        <i class="fa-solid fa-eye text-danger opacity-75"></i>
-                                    </button>
-                                </div>
-                                {% if field.errors %}
-                                    <div class="text-danger small mt-1 fw-bold">{{ field.errors|striptags }}</div>
-                                {% endif %}
+                        <div class="mb-3 position-relative">
+                            <div class="form-floating">
+                                {{ field }}
+                                <label class="ms-2" for="{{ field.id_for_label }}">
+                                    <i class="fa-solid fa-key me-2 opacity-50"></i> {{ field.label }}
+                                </label>
                             </div>
+                            <span class="position-absolute top-50 end-0 translate-middle-y me-3 text-danger toggle-password" style="cursor: pointer;">
+                                <i class="fa-solid fa-eye"></i>
+                            </span>
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1 ms-2">{{ field.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
                         {% endfor %}
-
-                        <button type="submit" name="change_password" class="btn btn-danger rounded-pill px-4 shadow-sm w-100 mt-2">
+                        
+                        <button type="submit" name="change_password" class="btn btn-danger w-100 rounded-pill shadow-sm mt-3 py-2">
                             <i class="fa-solid fa-lock me-2"></i> Оновити пароль
                         </button>
                     </form>
@@ -101,30 +117,29 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // 1. Стилізація полів Django
-        const passInputs = document.querySelectorAll('.col-lg-5 input[type="password"]');
-        passInputs.forEach(input => {
-            input.classList.add('form-control', 'border-danger-subtle', 'bg-transparent');
-            input.setAttribute('placeholder', ' ');
+    document.addEventListener("DOMContentLoaded", function() {
+        // УНІВЕРСАЛЬНИЙ ФІКС ДЛЯ ПОЛІВ
+        let allInputs = document.querySelectorAll('form input:not([type="hidden"]):not([type="submit"])');
+        allInputs.forEach(function(input) {
+            input.classList.add('form-control');
+            if (!input.placeholder) {
+                input.placeholder = " "; 
+            }
         });
 
-        // 2. Логіка для всіх кнопок "Око"
-        const toggleButtons = document.querySelectorAll('.toggle-password');
-        toggleButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Знаходимо поле input, яке лежить поруч із цією конкретною кнопкою
-                const inputWrapper = this.previousElementSibling;
-                const input = inputWrapper.querySelector('input');
-                const icon = this.querySelector('i');
+        // ОЖИВЛЯЄМО "ОКА" ДЛЯ ПАРОЛІВ
+        let toggleIcons = document.querySelectorAll('.toggle-password');
+        toggleIcons.forEach(function(iconSpan) {
+            iconSpan.addEventListener('click', function() {
+                let input = this.parentElement.querySelector('input');
+                let icon = this.querySelector('i');
                 
-                // Перемикаємо тип і іконку
-                if (input.type === 'password') {
-                    input.type = 'text';
+                if (input.type === "password") {
+                    input.type = "text";
                     icon.classList.remove('fa-eye');
                     icon.classList.add('fa-eye-slash');
                 } else {
-                    input.type = 'password';
+                    input.type = "password";
                     icon.classList.remove('fa-eye-slash');
                     icon.classList.add('fa-eye');
                 }

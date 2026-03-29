@@ -28,64 +28,40 @@
         </script>
     {% endif %}
 
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm h-100 border-0">
-                <div class="card-body text-center mt-3">
-                    <i class="fa-solid fa-mug-hot fa-4x text-warning mb-3"></i>
-                    <h5 class="card-title">Знижка 50% на каву</h5>
-                    <p class="text-muted">Отримайте промокод на каву у мережі партнерів.</p>
-                    <h3 class="text-success fw-bold">30 <small class="text-muted fs-6">балів</small></h3>
+<div class="row g-4 mt-2">
+        {% for offer in offers %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm border-0 bg-body rounded-4">
+                <div class="card-body p-4 text-center d-flex flex-column">
+                    <h5 class="fw-bold mb-3 text-dark">{{ offer.title }}</h5>
+                    <p class="text-muted small mb-4">{{ offer.description }}</p>
+                    
+                    <div class="mt-auto">
+                        <span class="badge bg-success bg-opacity-10 text-success fs-5 px-3 py-2 mb-4 rounded-pill border border-success-subtle">
+                            {{ offer.cost }} еко-балів
+                        </span>
+                        
+                        <form method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="offer_id" value="{{ offer.id }}">
+                            <button type="submit" class="btn btn-success w-100 rounded-pill shadow-sm">
+                                <i class="fa-solid fa-cart-shopping me-2"></i> Обміняти
+                            </button>
+                        </form>
+                    </div>
                 </div>
-                <div class="card-footer bg-transparent border-0 mb-3 text-center">
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="reward_name" value="Знижка 50% на каву">
-                        <input type="hidden" name="cost" value="30">
-                        <button type="submit" class="btn btn-success w-100">Обміняти</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm h-100 border-0">
-                <div class="card-body text-center mt-3">
-                    <i class="fa-solid fa-bag-shopping fa-4x text-info mb-3"></i>
-                    <h5 class="card-title">Брендована еко-торба</h5>
-                    <p class="text-muted">Зручна багаторазова торба з логотипом EcoBonus.</p>
-                    <h3 class="text-success fw-bold">150 <small class="text-muted fs-6">балів</small></h3>
-                </div>
-                <div class="card-footer bg-transparent border-0 mb-3 text-center">
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="reward_name" value="Брендована еко-торба">
-                        <input type="hidden" name="cost" value="150">
-                        <button type="submit" class="btn btn-success w-100">Обміняти</button>
-                    </form>
+                <div class="card-footer bg-transparent border-top-0 text-muted pb-3 pt-0 text-center" style="font-size: 0.8rem;">
+                    Надано партнером: <strong class="text-success opacity-75">{{ offer.store.username }}</strong>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-4 mb-4">
-            <div class="card shadow-sm h-100 border-0">
-                <div class="card-body text-center mt-3">
-                    <i class="fa-solid fa-ticket fa-4x text-danger mb-3"></i>
-                    <h5 class="card-title">Квиток у кіно</h5>
-                    <p class="text-muted">Один квиток на будь-який сеанс у кінотеатрі.</p>
-                    <h3 class="text-success fw-bold">300 <small class="text-muted fs-6">балів</small></h3>
-                </div>
-                <div class="card-footer bg-transparent border-0 mb-3 text-center">
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="reward_name" value="Квиток у кіно">
-                        <input type="hidden" name="cost" value="300">
-                        <button type="submit" class="btn btn-success w-100">Обміняти</button>
-                    </form>
-                </div>
-            </div>
+        {% empty %}
+        <div class="col-12 text-center py-5 text-muted">
+            <i class="fa-solid fa-store-slash fa-4x mb-4 opacity-25"></i>
+            <h4 class="fw-normal">Магазин поки що порожній</h4>
+            <p>Наші партнери вже готують для вас нові винагороди!</p>
         </div>
+        {% endfor %}
     </div>
-</div>
 
 {% endblock %}

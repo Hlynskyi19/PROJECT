@@ -1,0 +1,120 @@
+{% extends 'main/layout.html' %}
+
+{% block title %}Панель магазину - EcoBonus{% endblock %}
+
+{% block content %}
+<div class="container mt-4 mb-5">
+    <h2 class="mb-4">
+        <i class="fa-solid fa-store text-success me-2"></i> Панель магазину: {{ user.username }}
+    </h2>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 bg-body rounded-3 p-4 border-success border-top border-4 h-100">
+                <h5 class="text-success mb-4"><i class="fa-solid fa-plus-circle me-2"></i>Додати пропозицію</h5>
+                
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="title" name="title" placeholder="Назва" required>
+                        <label for="title">Назва (напр. Знижка 15%)</label>
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <textarea class="form-control" id="description" name="description" placeholder="Опис" style="height: 100px"></textarea>
+                        <label for="description">Детальний опис товару/послуги</label>
+                    </div>
+                    
+                    <div class="form-floating mb-4">
+                        <input type="number" class="form-control border-success" id="cost" name="cost" placeholder="Вартість" min="1" required>
+                        <label for="cost">Вартість у балах</label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100 rounded-pill shadow-sm mt-auto py-2">
+                        Створити пропозицію
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            
+            <div class="card shadow-sm border-0 bg-body rounded-3 mb-4">
+                <div class="card-header bg-transparent border-bottom border-success-subtle p-3">
+                    <h5 class="mb-0 fw-bold text-success"><i class="fa-solid fa-tags me-2"></i>Ваші активні пропозиції</h5>
+                </div>
+                <div class="card-body p-0">
+                    <ul class="list-group list-group-flush">
+                        {% for offer in my_offers %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+                            <div>
+                                <h6 class="mb-0 fw-bold">{{ offer.title }}</h6>
+                                <small class="text-muted">{{ offer.description|truncatechars:60 }}</small>
+                            </div>
+                            
+                            <div class="d-flex align-items-center gap-3">
+                                <span class="badge bg-success rounded-pill fs-6 px-3">{{ offer.cost }} балів</span>
+                                
+                                <form action="{% url 'delete_offer' offer.id %}" method="POST" class="m-0" onsubmit="return confirm('Ви впевнені, що хочете назавжди видалити цю пропозицію?');">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle shadow-sm d-flex justify-content-center align-items-center" style="width: 32px; height: 32px; padding: 0;" title="Видалити пропозицію">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-center py-4 text-muted">
+                            Ви ще не додали жодної пропозиції в магазин.
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 bg-body rounded-3">
+                <div class="card-header bg-transparent border-bottom border-success-subtle p-3">
+                    <h5 class="mb-0 fw-bold text-success"><i class="fa-solid fa-ticket me-2"></i>Придбані клієнтами промокоди</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="bg-body-tertiary">
+                                <tr>
+                                    <th class="py-3 ps-3 text-muted">Дата</th>
+                                    <th class="py-3 text-muted">Хто придбав</th>
+                                    <th class="py-3 text-muted">Що придбав</th>
+                                    <th class="py-3 pe-3 text-end text-muted">Промокод</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for code in purchased_codes %}
+                                <tr>
+                                    <td class="ps-3 text-muted small">{{ code.purchased_at|date:"d.m.Y H:i" }}</td>
+                                    <td class="fw-medium"><i class="fa-solid fa-user text-success opacity-50 me-1"></i> {{ code.user.username }}</td>
+                                    <td>{{ code.offer.title }}</td>
+                                    <td class="pe-3 text-end">
+                                        <span class="font-monospace fw-bold px-2 py-1 bg-body-tertiary border border-success-subtle rounded text-success" style="letter-spacing: 1px;">
+                                            {{ code.promo_code }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-5 text-muted border-0">
+                                        <i class="fa-solid fa-box-open fa-3x mb-3 opacity-50"></i>
+                                        <p class="mb-0">Поки що жоден клієнт не обміняв бали на ваші пропозиції.</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

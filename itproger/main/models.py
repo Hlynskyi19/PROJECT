@@ -28,6 +28,7 @@ class UserProfile(models.Model):
     balance = models.DecimalField('Баланс еко-балів', max_digits=10, decimal_places=2, default=0.00)
 
     is_partner = models.BooleanField(default=False, verbose_name="Це акаунт пункту прийому (Партнер)?")
+    is_store = models.BooleanField(default=False, verbose_name='Магазин-партнер')
 
     phone_number = models.CharField('Номер телефону', max_length=20, blank=True, null=True)
     birth_date = models.DateField('Дата народження', blank=True, null=True)
@@ -70,6 +71,19 @@ class UserReward(models.Model):
     reward_name = models.CharField(max_length=255, verbose_name="Назва винагороди")
     promo_code = models.CharField(max_length=20, verbose_name="Унікальний код")
     purchased_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата покупки")
+    offer = models.ForeignKey('StoreOffer', on_delete=models.SET_NULL, null=True, blank=True, related_name='purchased_codes', verbose_name='Яка пропозиція')
+    is_used = models.BooleanField(default=False, verbose_name='Використано')
 
     def __str__(self):
         return f"{self.user.username} - {self.promo_code}"
+
+class StoreOffer(models.Model):
+    store = models.ForeignKey(User, on_delete=models.CASCADE, related_name='offers', verbose_name='Магазин')
+    title = models.CharField(max_length=100, verbose_name='Назва винагороди')
+    description = models.TextField(verbose_name='Опис', blank=True, null=True)
+    cost = models.IntegerField(verbose_name='Вартість (в балах)')
+    is_active = models.BooleanField(default=True, verbose_name='Активно')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.store.username})"
