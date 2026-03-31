@@ -65,51 +65,52 @@
 
         <hr class="mt-4 mb-3">
         <ul class="nav nav-pills flex-column mb-2">
-            {% if user.is_authenticated %}
-                {% if user.userprofile.is_partner %}
-                <li class="nav-item mb-2 mt-2">
-                    <a href="{% url 'partner_panel' %}" class="nav-link text-white rounded border border-success" style="background-color: #2b7a2b;">
-                        <i class="fa-solid fa-building-circle-check me-2"></i> Пункт прийому
+           {% if user.is_authenticated %}
+                <li class="nav-item mb-2">
+                    <a href="{% url 'profile' %}" class="nav-link text-white p-2 rounded-3 hover-effect {% if request.resolver_match.url_name == 'profile' %}fw-bold{% endif %}" 
+                       style="background-color: {% if request.resolver_match.url_name == 'profile' %}rgba(255, 255, 255, 0.2){% else %}rgba(255, 255, 255, 0.05){% endif %};">
+                        <i class="fa-solid fa-circle-user me-2"></i> Кабінет ({{ user.username }})
                     </a>
                 </li>
-                {% endif %}
-
-                <li class="nav-item mb-2">
-                    {% if user.userprofile.is_partner %}
-                        <a href="{% url 'partner_panel' %}" class="nav-link text-white mb-2 p-2 rounded-3" style="background-color: rgba(25, 135, 84, 0.2);">
+                
+                {% if user.userprofile.is_partner %}
+                    <li class="nav-item mb-2 mt-2">
+                        <a href="{% url 'partner_panel' %}" class="nav-link text-white p-2 rounded-3 hover-effect {% if request.resolver_match.url_name == 'partner_panel' %}fw-bold{% endif %}" 
+                           style="background-color: {% if request.resolver_match.url_name == 'partner_panel' %}rgba(25, 135, 84, 0.8){% else %}rgba(25, 135, 84, 0.4){% endif %};">
                             <i class="fa-solid fa-building-circle-check me-2"></i> Панель організації
                         </a>
-                    {% elif user.userprofile.is_store %}
-                        <a href="{% url 'store_panel' %}" class="nav-link text-white mb-2 p-2 rounded-3" style="background-color: rgba(25, 135, 84, 0.2);">
+                    </li>
+                {% elif user.userprofile.is_store %}
+                    <li class="nav-item mb-2 mt-2">
+                        <a href="{% url 'store_panel' %}" class="nav-link text-white p-2 rounded-3 hover-effect {% if request.resolver_match.url_name == 'store_panel' %}fw-bold{% endif %}" 
+                           style="background-color: {% if request.resolver_match.url_name == 'store_panel' %}rgba(25, 135, 84, 0.8){% else %}rgba(25, 135, 84, 0.4){% endif %};">
                             <i class="fa-solid fa-store me-2"></i> Панель магазину
                         </a>
-                    {% else %}
-                        <a href="{% url 'profile' %}" class="nav-link text-white mb-2 p-2 rounded-3" style="background-color: rgba(255, 255, 255, 0.1);">
-                            <i class="fa-solid fa-circle-user me-2"></i> Кабінет ({{ user.username }})
-                        </a>
-                    {% endif %}
-                </li>
+                    </li>
+                {% endif %}
                 
-                <li class="nav-item mb-2">
-                    <a href="{% url 'settings' %}" class="nav-link text-white rounded" style="background-color: rgba(255,255,255,0.05);">
+                <li class="nav-item mb-2 mt-2">
+                    <a href="{% url 'settings' %}" class="nav-link text-white rounded hover-effect {% if request.resolver_match.url_name == 'settings' %}fw-bold{% endif %}" 
+                       style="background-color: {% if request.resolver_match.url_name == 'settings' %}rgba(255, 255, 255, 0.2){% else %}rgba(255, 255, 255, 0.05){% endif %};">
                         <i class="fa-solid fa-gear me-2"></i> Налаштування
                     </a>
                 </li>
                 <li class="nav-item mb-2">
                     <form method="post" action="{% url 'logout' %}" class="m-0 p-0">
                         {% csrf_token %}
-                        <button type="submit" class="nav-link text-warning rounded w-100 text-start border-0" style="background: transparent;">
+                        <button type="submit" class="nav-link text-warning rounded w-100 text-start border-0 hover-effect" style="background: transparent;">
                             <i class="fa-solid fa-right-from-bracket me-2"></i> Вийти
                         </button>
                     </form>
                 </li>
-          {% else %}
+            {% else %}
                 <li class="nav-item mb-2">
                     <a href="{% url 'login' %}" class="btn btn-outline-warning w-100 text-start rounded shadow-sm fw-medium p-2 px-3">
                         <i class="fa-solid fa-right-to-bracket me-2"></i> Увійти
                     </a>
                 </li>
-                <li class="nav-item mb-2"> <a href="{% url 'register' %}" class="btn btn-outline-info w-100 text-start rounded shadow-sm fw-medium p-2 px-3">
+                <li class="nav-item mb-2"> 
+                    <a href="{% url 'register' %}" class="btn btn-outline-info w-100 text-start rounded shadow-sm fw-medium p-2 px-3">
                         <i class="fa-solid fa-user-plus me-2"></i> Реєстрація
                     </a>
                 </li>
@@ -162,24 +163,19 @@
             const htmlElement = document.documentElement;
             const themeButtons = document.querySelectorAll('.theme-btn');
 
-            // 1. Функція для застосування теми
             const setTheme = (theme) => {
                 if (theme === 'auto') {
-                    // Перевіряємо системні налаштування (Windows/Mac/Android)
                     const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
                     htmlElement.setAttribute('data-bs-theme', isSystemDark ? 'dark' : 'light');
                 } else {
                     htmlElement.setAttribute('data-bs-theme', theme);
                 }
-                // Зберігаємо вибір користувача в пам'ять браузера
                 localStorage.setItem('eco_theme', theme);
             };
 
-            // 2. Завантажуємо збережену тему при відкритті сайту (або ставимо 'auto' за замовчуванням)
             const savedTheme = localStorage.getItem('eco_theme') || 'auto';
             setTheme(savedTheme);
 
-            // 3. Вішаємо кліки на наші три кнопки в меню
             themeButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const selectedTheme = button.getAttribute('data-theme');
@@ -187,7 +183,6 @@
                 });
             });
 
-            // 4. Слідкуємо, якщо користувач змінив тему самої Windows/системи під час відкритого сайту
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
                 if (localStorage.getItem('eco_theme') === 'auto') {
                     setTheme('auto');

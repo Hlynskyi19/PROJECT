@@ -6,7 +6,7 @@
 <div class="container mt-4 mb-5">
     <h2 class="mb-4">
         {% if user.userprofile.is_partner %}
-            <i class="fa-solid fa-building text-success me-2"></i> Панель організації: {{ user.username }}
+            <i class="fa-solid fa-building text-success me-2"></i> Кабінет організації: {{ user.username }}
         {% elif user.userprofile.is_store %}
             <i class="fa-solid fa-store text-success me-2"></i> Кабінет магазину: {{ user.username }}
         {% else %}
