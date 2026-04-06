@@ -3,68 +3,89 @@
 {% block title %}{{ point.name }} - EcoBonus{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-5">
-            <div class="card shadow-sm mb-4">
-                <div class="card-body">
-                    <h2 class="text-success"><i class="fa-solid fa-recycle"></i> {{ point.name }}</h2>
-                    <p class="text-muted"><i class="fa-solid fa-location-dot"></i> {{ point.address }}</p>
-                    <hr>
-                    <h5>Що приймають:</h5>
-                    <ul class="list-group list-group-flush mb-3">
+<div class="container mt-4 mb-5">
+    <div class="row g-4">
+        
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 bg-body rounded-4 mb-4 border-success border-top border-4">
+                <div class="card-body p-4">
+                    <h2 class="text-success fw-bold mb-3"><i class="fa-solid fa-recycle me-2"></i> {{ point.name }}</h2>
+                    <p class="text-muted fs-5"><i class="fa-solid fa-location-dot me-2"></i> {{ point.address }}</p>
+                    
+                    <hr class="border-success-subtle my-4">
+                    
+                    <h5 class="fw-bold text-body mb-3">Що приймають:</h5>
+                    <ul class="list-group list-group-flush mb-4 rounded-3 border border-success-subtle overflow-hidden">
                         {% for waste in point.waste_types.all %}
-                            <li class="list-group-item"><i class="fa-solid fa-check text-success"></i> {{ waste.name }}</li>
+                            <li class="list-group-item bg-body text-body border-success-subtle px-3 py-2">
+                                <i class="fa-solid fa-check text-success me-2"></i> {{ waste.name }}
+                            </li>
                         {% empty %}
-                            <li class="list-group-item text-muted">Інформація відсутня</li>
+                            <li class="list-group-item bg-body text-muted border-0">Інформація відсутня</li>
                         {% endfor %}
                     </ul>
-                    <h5>Опис / Години роботи:</h5>
-                    <p>{{ point.description|default:"Опис відсутній." }}</p>
+                    
+                    <h5 class="fw-bold text-body mb-3">Опис / Години роботи:</h5>
+                    <p class="text-body mb-0" style="line-height: 1.6;">{{ point.description|default:"Опис відсутній." }}</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-7">
-            <h4>Відгуки користувачів</h4>
+        <div class="col-lg-7">
+            <h4 class="mb-4 fw-bold text-body"><i class="fa-solid fa-comments text-success me-2"></i> Відгуки користувачів</h4>
             
             {% if user.is_authenticated %}
-            <div class="card mb-4 bg-light">
-                <div class="card-body">
+            <div class="card shadow-sm border-0 bg-body rounded-4 mb-5 border-success border-top border-4">
+                <div class="card-body p-4">
                     <form method="post">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label class="form-label">Оцінка (1-5):</label>
-                            <input type="number" name="rating" class="form-control" min="1" max="5" required>
+                            <label class="form-label text-body fw-medium">Оцінка (1-5):</label>
+                            <input type="number" name="rating" class="form-control" min="1" max="5" required placeholder="Наприклад: 5">
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Ваш коментар:</label>
-                            <textarea name="comment" class="form-control" rows="3" required></textarea>
+                        <div class="mb-4">
+                            <label class="form-label text-body fw-medium">Ваш коментар:</label>
+                            <textarea name="comment" class="form-control" rows="3" required placeholder="Поділіться своїми враженнями від сервісу..."></textarea>
                         </div>
-                        <button type="submit" class="btn btn-success"><i class="fa-solid fa-paper-plane"></i> Відправити відгук</button>
+                        <button type="submit" class="btn btn-success rounded-pill px-4 py-2 shadow-sm w-100">
+                            <i class="fa-solid fa-paper-plane me-2"></i> Відправити відгук
+                        </button>
                     </form>
                 </div>
             </div>
             {% else %}
-            <div class="alert alert-info">
-                Щоб залишити відгук, <a href="{% url 'login' %}">увійдіть</a> або <a href="{% url 'register' %}">зареєструйтесь</a>.
+            <div class="alert shadow-sm mb-5 rounded-4 p-4 fs-5 border-0 text-success" style="background-color: rgba(25, 135, 84, 0.1);">
+                <i class="fa-solid fa-circle-info me-2 fa-lg"></i> 
+                Щоб залишити відгук, <a href="{% url 'login' %}" class="alert-link fw-bold text-success text-decoration-underline">увійдіть</a> 
+                або <a href="{% url 'register' %}" class="alert-link fw-bold text-success text-decoration-underline">зареєструйтесь</a>.
             </div>
             {% endif %}
 
-            {% for review in reviews %}
-            <div class="card mb-3 shadow-sm">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <strong><i class="fa-solid fa-user"></i> {{ review.user.username }}</strong>
-                        <span class="badge bg-success">{{ review.rating }} / 5 <i class="fa-solid fa-star"></i></span>
+            <div class="d-flex flex-column gap-3">
+                {% for review in reviews %}
+                <div class="card shadow-sm border-0 bg-body rounded-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <strong class="fs-5 text-body">
+                                <i class="fa-solid fa-circle-user text-success opacity-75 me-2 fs-4 align-middle"></i> {{ review.user.username }}
+                            </strong>
+                            <span class="badge bg-success bg-opacity-10 text-success border border-success-subtle fs-6 rounded-pill px-3 py-2">
+                                {{ review.rating }} <i class="fa-solid fa-star ms-1"></i>
+                            </span>
+                        </div>
+                        <p class="mt-2 mb-3 text-body" style="line-height: 1.5;">{{ review.comment }}</p>
+                        <small class="text-muted"><i class="fa-regular fa-clock me-1"></i> {{ review.created_at|date:"d M Y, H:i" }}</small>
                     </div>
-                    <p class="mt-2 mb-1">{{ review.comment }}</p>
-                    <small class="text-muted">{{ review.created_at|date:"d M Y, H:i" }}</small>
                 </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-comment-dots fa-4x text-muted opacity-25 mb-3"></i>
+                    <h5 class="text-muted fw-normal">Поки що немає відгуків</h5>
+                    <p class="text-muted mb-0">Станьте першим, хто оцінить цей пункт прийому!</p>
+                </div>
+                {% endfor %}
             </div>
-            {% empty %}
-                <p class="text-muted">Поки що немає відгуків. Будьте першим!</p>
-            {% endfor %}
+            
         </div>
     </div>
 </div>

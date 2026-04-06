@@ -14,49 +14,54 @@
         {% endif %}
     </h2>
 
-    <div class="row g-4">
-        <div class="col-md-4">
-            {% if user.userprofile.is_partner %}
-                <div class="card shadow-sm border-0 bg-body rounded-3 text-center p-4 border-success border-top border-4">
-                    <h5 class="text-muted mb-3">Управління пунктом</h5>
-                    <i class="fa-solid fa-building-circle-check fa-4x text-success mb-3 opacity-75"></i>
-                    <p class="text-muted small mb-4">Тут ви можете нараховувати еко-бали клієнтам за здану вторсировину.</p>
-                    <a href="{% url 'partner_panel' %}" class="btn btn-success w-100 rounded-pill shadow-sm">
-                        <i class="fa-solid fa-plus-circle me-2"></i> Нарахувати бали
+    {% if user.userprofile.is_store %}
+        <div class="card shadow-sm border-0 rounded-4 overflow-hidden mb-4 border-success border-top border-5">
+            <div class="card-body p-0 position-relative" style="background: linear-gradient(135deg, rgba(25,135,84,0.03) 0%, rgba(25,135,84,0.1) 100%);">
+                <i class="fa-solid fa-shop position-absolute text-success opacity-10" style="font-size: 25rem; top: -50px; right: -50px; transform: rotate(-10deg); pointer-events: none;"></i>
+                
+                <div class="p-5 py-md-5 text-center position-relative z-1">
+                    <div class="d-inline-flex justify-content-center align-items-center bg-body rounded-circle shadow-sm mb-4 border border-success-subtle" style="width: 120px; height: 120px;">
+                        <i class="fa-solid fa-store fa-4x text-success"></i>
+                    </div>
+                    
+                    <h2 class="display-6 fw-bold text-body mb-3">Вітаємо у кабінеті партнера!</h2>
+                    
+                    <p class="fs-5 text-muted mb-5 mx-auto" style="max-width: 700px;">
+                        Це ваш загальний профіль у системі <strong>EcoBonus</strong>. Уся статистика продажів, управління товарами та перевірка придбаних промокодів знаходяться у спеціальній робочій зоні.
+                    </p>
+                    
+                    <a href="{% url 'store_panel' %}" class="btn btn-success btn-lg rounded-pill px-5 py-3 shadow-sm mb-3" style="transition: all 0.3s; transform: scale(1);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        <i class="fa-solid fa-gauge-high me-2"></i> Відкрити Панель магазину
                     </a>
                 </div>
-            {% elif user.userprofile.is_store %}
-                <div class="card shadow-sm border-0 bg-body rounded-3 text-center p-4 border-success border-top border-4">
-                    <h5 class="text-muted mb-3">Управління магазином</h5>
-                    <i class="fa-solid fa-shop fa-4x text-success mb-3 opacity-75"></i>
-                    <p class="text-muted small mb-4">Тут ви можете додавати товари та керувати промокодами.</p>
-                    <a href="{% url 'store_panel' %}" class="btn btn-success w-100 rounded-pill shadow-sm">
-                        <i class="fa-solid fa-gear me-2"></i> Панель магазину
-                    </a>
-                </div>
-            {% else %}
-                <div class="card shadow-sm border-0 bg-body rounded-3 text-center p-4">
-                    <h5 class="text-muted mb-3">Ваш баланс</h5>
-                    <h1 class="display-3 fw-bold text-success mb-0">{{ profile.balance }}</h1>
-                    <p class="text-muted mb-4">еко-балів</p>
-                    <a href="{% url 'rewards' %}" class="btn btn-success w-100 rounded-pill shadow-sm">
-                        <i class="fa-solid fa-cart-shopping me-2"></i> Витратити бали
-                    </a>
-                </div>
-            {% endif %}
+            </div>
         </div>
 
-        <div class="col-md-8">
-            {% if user.userprofile.is_store %}
-                <div class="card shadow-sm border-0 bg-body rounded-3 h-100 d-flex flex-column justify-content-center align-items-center p-5 text-center text-muted">
-                    <i class="fa-solid fa-store fa-5x mb-4 opacity-25"></i>
-                    <h4>Це ваш загальний профіль</h4>
-                    <p class="mb-4">Уся статистика продажів, додавання товарів та управління промокодами знаходяться у спеціальній Панелі магазину.</p>
-                    <a href="{% url 'store_panel' %}" class="btn btn-outline-success rounded-pill px-4">
-                        Перейти до Панелі магазину
-                    </a>
-                </div>
-            {% else %}
+    {% else %}
+        <div class="row g-4">
+            <div class="col-md-4">
+                {% if user.userprofile.is_partner %}
+                    <div class="card shadow-sm border-0 bg-body rounded-3 text-center p-4 border-success border-top border-4">
+                        <h5 class="text-muted mb-3">Управління пунктом</h5>
+                        <i class="fa-solid fa-building-circle-check fa-4x text-success mb-3 opacity-75"></i>
+                        <p class="text-muted small mb-4">Тут ви можете нараховувати еко-бали клієнтам за здану вторсировину.</p>
+                        <a href="{% url 'partner_panel' %}" class="btn btn-success w-100 rounded-pill shadow-sm mt-auto">
+                            <i class="fa-solid fa-plus-circle me-2"></i> Нарахувати бали
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="card shadow-sm border-0 bg-body rounded-3 text-center p-4">
+                        <h5 class="text-muted mb-3">Ваш баланс</h5>
+                        <h1 class="display-3 fw-bold text-success mb-0">{{ profile.balance }}</h1>
+                        <p class="text-muted mb-4">еко-балів</p>
+                        <a href="{% url 'rewards' %}" class="btn btn-success w-100 rounded-pill shadow-sm mt-auto">
+                            <i class="fa-solid fa-cart-shopping me-2"></i> Витратити бали
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-8">
                 <div class="card shadow-sm border-0 bg-body rounded-3 h-100">
                     <div class="card-header bg-transparent border-bottom border-success-subtle p-3">
                         <h5 class="mb-0 fw-bold text-success">
@@ -94,7 +99,7 @@
                                             {% endif %}
                                         </td>
                                         {% if user.userprofile.is_partner %}
-                                            <td class="fw-medium text-dark">
+                                            <td class="fw-medium text-body">
                                                 <i class="fa-solid fa-user text-success opacity-50 me-1"></i> {{ tx.user.username|default:tx.user.user.username|default:"Клієнт" }}
                                             </td>
                                         {% endif %}
@@ -126,9 +131,9 @@
                         </div>
                     </div>
                 </div>
-            {% endif %}
+            </div>
         </div>
-    </div>
+    {% endif %}
 
     {% if not user.userprofile.is_partner and not user.userprofile.is_store %}
         <h4 class="mt-5 mb-4 fw-bold">
