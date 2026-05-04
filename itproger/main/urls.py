@@ -17,4 +17,5 @@ urlpatterns = [
     path('settings/', views.settings_view, name='settings'),
     path('store-panel/', views.store_panel, name='store_panel'),
     path('delete-offer/<int:offer_id>/', views.delete_offer, name='delete_offer'),
+    path('rules/', views.rules, name='rules'),
 ]

@@ -52,6 +52,11 @@
                 </a>
             </li>
             <li class="nav-item mb-2">
+                <a href="{% url 'rules' %}" class="nav-link text-white {% if request.resolver_match.url_name == 'rules' %}active fw-bold{% endif %}" style="{% if request.resolver_match.url_name != 'rules' %}background: none;{% endif %}; border-radius: 8px;">
+                    <i class="fa-solid fa-book me-2"></i> Правила сортування
+                </a>
+            </li>
+            <li class="nav-item mb-2">
                 <a href="{% url 'rewards' %}" class="nav-link text-white {% if request.resolver_match.url_name == 'rewards' %}active fw-bold{% endif %}" style="{% if request.resolver_match.url_name != 'rewards' %}background: none;{% endif %}; border-radius: 8px;">
                     <i class="fa-solid fa-gift me-2"></i> Винагороди
                 </a>

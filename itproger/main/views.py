@@ -1,13 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 import json
 from django.contrib.auth.decorators import login_required
 from .models import RecyclingPoint, UserProfile, Review, Transaction, UserReward, StoreOffer
 from django.contrib import messages
-from .services import spend_eco_points
+from .services import spend_eco_points, add_eco_points
 import uuid
 from django.contrib.auth.models import User
-from .services import spend_eco_points, add_eco_points
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from .forms import CustomRegisterForm, UserUpdateForm, ProfileUpdateForm
 
@@ -41,8 +40,9 @@ def index(request):
 def about(request):
     return render(request, 'main/about.html')
 
-from django.contrib.auth import login
-from django.shortcuts import redirect
+# НОВА ФУНКЦІЯ ДЛЯ СТОРІНКИ ПРАВИЛ
+def rules(request):
+    return render(request, 'main/rules.html')
 
 def register(request):
     # Якщо користувач відправив форму з даними
@@ -62,9 +62,6 @@ def register(request):
         form = CustomRegisterForm()
         
     return render(request, 'main/register.html', {'form': form})
-
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import RecyclingPoint, UserProfile, Review # Додали імпорт Review
 
 def point_detail(request, point_id):
     # Шукаємо пункт за ID, якщо не знайдено — видасть помилку 404
@@ -98,13 +95,13 @@ def profile(request):
         # Для пункту прийому все правильно (партнер прив'язаний до User)
         transactions = Transaction.objects.filter(partner=request.user).order_by('-created_at')
     else:
-        # ВИПРАВЛЕНО ТУТ: Шукаємо по user_profile, а не по request.user!
+        # Шукаємо по user_profile, а не по request.user!
         transactions = Transaction.objects.filter(user=user_profile).order_by('-created_at')
         
     # Дістаємо всі куплені промокоди користувача
     my_rewards = UserReward.objects.filter(user=request.user).order_by('-purchased_at')
 
-    # 3. Передаємо все у шаблон
+    # Передаємо все у шаблон
     return render(request, 'main/profile.html', {
         'profile': user_profile,
         'transactions': transactions,
