@@ -3,14 +3,12 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 import uuid
 
-# 1. Типи відходів (Пластик, Скло, Папір тощо)
 class WasteType(models.Model):
     name = models.CharField('Тип відходів', max_length=50)
 
     def __str__(self):
         return self.name
 
-# 2. Пункти прийому
 class RecyclingPoint(models.Model):
     name = models.CharField('Назва пункту', max_length=100)
     address = models.CharField('Адреса', max_length=200)
@@ -22,7 +20,6 @@ class RecyclingPoint(models.Model):
     def __str__(self):
         return self.name
 
-# 3. Профіль користувача (розширюємо стандартного User для зберігання балів)
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     balance = models.DecimalField('Баланс еко-балів', max_digits=10, decimal_places=2, default=0.00)
@@ -36,7 +33,6 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.balance} балів"
 
-# 4. Історія нарахування/списання балів
 class Transaction(models.Model):
     TYPES = (
         ('EARN', 'Нарахування'),

@@ -4,23 +4,20 @@
 
 {% block extra_head %}
 <style>
-    /* Стилі для красивих карток лотів */
     .reward-card {
         transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         border: 2px solid rgba(0,0,0,0.05) !important;
     }
     
-    /* Ефект при наведенні мишки */
     .reward-card:hover {
         transform: translateY(-5px);
         box-shadow: 0 10px 20px rgba(25, 135, 84, 0.15) !important;
         border-color: rgba(25, 135, 84, 0.4) !important;
     }
 
-    /* Адаптація під темну тему */
     [data-bs-theme="dark"] .reward-card {
         border-color: rgba(255,255,255,0.05) !important;
-        background-color: #212529 !important; /* Трохи світліший фон для виділення */
+        background-color: #212529 !important;
     }
     [data-bs-theme="dark"] .reward-card:hover {
         border-color: rgba(25, 135, 84, 0.5) !important;

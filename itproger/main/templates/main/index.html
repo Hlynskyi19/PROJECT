@@ -95,20 +95,15 @@
     </div>
 
 </div> <script>
-    // Ініціалізація карти (Координати Рівного)
     var map = L.map('map').setView([50.6199, 26.2516], 13);
 
-    // Підключення безкоштовних тайлів від OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Отримуємо JSON з нашими точками з бекенду Django
     var points = JSON.parse('{{ points_json|escapejs }}');
     
-    // Розставляємо маркери циклом
     points.forEach(function(point) {
-        // Формуємо посилання на сторінку пункту
         var link = "<br><br><a href='/point/" + point.id + "' class='btn btn-sm btn-success text-white w-100' style='text-decoration: none;'>Відгуки та деталі</a>";
         
         L.marker([point.lat, point.lon])

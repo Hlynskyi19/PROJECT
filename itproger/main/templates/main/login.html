@@ -68,16 +68,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        
-        // 1. ТРЮК: Автоматично додаємо класи Bootstrap до полів Django
-        // Це позбавляє нас необхідності писати LoginForm у forms.py
         const inputs = document.querySelectorAll('form input:not([type="hidden"])');
         inputs.forEach(input => {
             input.classList.add('form-control', 'rounded-3', 'border-success-subtle', 'bg-transparent');
-            input.setAttribute('placeholder', ' '); // Магія для роботи floating labels
+            input.setAttribute('placeholder', ' ');
         });
 
-        // 2. ЛОГІКА ІКОНКИ "ОКА"
         const passwordInput = document.querySelector('input[name="password"]');
         const togglePasswordBtn = document.getElementById('togglePasswordLogin');
         const eyeIcon = document.getElementById('eyeIconLogin');

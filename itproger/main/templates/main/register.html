@@ -117,69 +117,49 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        
-        // --- 1. ПЕРЕВІРКА ПОЛОЖЕННЯ ЕЛЕМЕНТІВ Django Forms ---
-        // Django автоматично додає IDs. Нам потрібно знайти їх у нашому HTML.
-        // Зазвичай це `id_username`, `id_email`, `id_password1`, `id_password2`.
-        
-        // ВАЖЛИВО: Оскільки ми виводимо полях форми вручну ({{ form.username }}), 
-        // Django автоматично рендерить їх із цими ID. Ми можемо використовувати їх безпосередньо.
-
         const passwordInput = document.getElementById('id_password1');
         const passwordValidationChecks = document.getElementById('password-validation-checks');
         const submitBtn = document.getElementById('submitBtn');
 
-        // Елементи умов
         const checkLength = document.getElementById('check-length');
         const checkUppercase = document.getElementById('check-uppercase');
         const checkNumber = document.getElementById('check-number');
 
-        // Іконки
         const xMarkIcon = 'fa-solid fa-circle-xmark me-1 opacity-75';
         const checkMarkIcon = 'fa-solid fa-circle-check me-1 opacity-75';
 
-
-        // --- 2. ЛОГІКА ІКОНКИ "ОКА" (Show/Hide Password) ---
         const togglePasswordMain = document.getElementById('togglePasswordMain');
         const eyeIconMain = document.getElementById('eyeIconMain');
 
         togglePasswordMain.addEventListener('click', function() {
-            // Перемикаємо тип input (з password на text і навпаки)
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
             
-            // Змінюємо іконку (fa-eye на fa-eye-slash)
             eyeIconMain.classList.toggle('fa-eye');
             eyeIconMain.classList.toggle('fa-eye-slash');
         });
 
 
-        // --- 3. ДИНАМІЧНА ПЕРЕВІРКА ПАРОЛЮ НА ХОДУ (Live Validation) ---
         
         const updateCheckStatus = (element, condition) => {
             if (condition) {
-                // Умова виконана -> Зелений
                 element.classList.remove('text-danger');
                 element.classList.add('text-success');
                 element.innerHTML = `<i class="${checkMarkIcon}"></i> ${element.innerText.trim()}`;
             } else {
-                // Умова не виконана -> Червоний
                 element.classList.remove('text-success');
                 element.classList.add('text-danger');
                 element.innerHTML = `<i class="${xMarkIcon}"></i> ${element.innerText.trim()}`;
             }
         };
 
-        // Функція, яка запускається щоразу, коли користувач вводить символ
         passwordInput.addEventListener('input', function() {
             const val = this.value;
 
-            // Визначаємо умови за допомогою регулярних виразів
             const hasLength = val.length >= 8;
-            const hasUppercase = /[A-Z]/.test(val); // Містить А-Я або A-Z (Django forms typically handle both)
+            const hasUppercase = /[A-Z]/.test(val);
             const hasNumber = /[0-9]/.test(val);
 
-            // Оновлюємо статус кожної умови
             updateCheckStatus(checkLength, hasLength);
             updateCheckStatus(checkUppercase, hasUppercase);
             updateCheckStatus(checkNumber, hasNumber);

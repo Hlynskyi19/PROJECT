@@ -118,7 +118,6 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        // УНІВЕРСАЛЬНИЙ ФІКС ДЛЯ ПОЛІВ
         let allInputs = document.querySelectorAll('form input:not([type="hidden"]):not([type="submit"])');
         allInputs.forEach(function(input) {
             input.classList.add('form-control');
@@ -127,7 +126,6 @@
             }
         });
 
-        // ОЖИВЛЯЄМО "ОКА" ДЛЯ ПАРОЛІВ
         let toggleIcons = document.querySelectorAll('.toggle-password');
         toggleIcons.forEach(function(iconSpan) {
             iconSpan.addEventListener('click', function() {
