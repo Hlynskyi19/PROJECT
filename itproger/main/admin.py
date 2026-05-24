@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import WasteType, RecyclingPoint, UserProfile, Transaction, Review # Додали Review сюди
+from .models import WasteType, RecyclingPoint, UserProfile, Transaction, Review
 
 admin.site.register(WasteType)
 admin.site.register(RecyclingPoint)
